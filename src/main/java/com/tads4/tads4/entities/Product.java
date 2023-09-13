@@ -12,7 +12,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ind;
+    private Long id;
     private String name;
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -32,19 +32,19 @@ public class Product {
     }
 
     public Product(Long ind, String name, String description, Double price, String imgUrl) {
-        this.ind = ind;
+        this.id = ind;
         this.name = name;
         this.description = description;
         this.price = price;
         this.imgUrl = imgUrl;
     }
 
-    public Long getInd() {
-        return ind;
+    public Long getId() {
+        return id;
     }
 
-    public void setInd(Long ind) {
-        this.ind = ind;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
