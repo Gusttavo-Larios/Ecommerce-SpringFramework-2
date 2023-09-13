@@ -11,8 +11,8 @@ import java.util.Optional;
 
 @Service
 public class ProductService {
-    /*@Autowired
-    private ProductRepository repository
+    @Autowired
+    private ProductRepository repository;
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id){
         Optional<Product> result = repository.findById(id);
@@ -20,5 +20,5 @@ public class ProductService {
         ProductDTO dto = new ProductDTO(product);
         return dto;
 
-    }*/
+    }
 }
