@@ -3,9 +3,9 @@ package com.tads4.tads4.dto;
 import com.tads4.tads4.entities.Product;
 
 public class ProductDTO {
+
     private Long id;
     private String name;
-
     private String description;
     private Double price;
     private String imgUrl;
@@ -22,12 +22,11 @@ public class ProductDTO {
     }
 
     public ProductDTO(Product entity) {
-        this.id = entity.getId();
-        this.name = entity.getName();
-        this.description = entity.getDescription();
-        this.price = entity.getPrice();
-        this.imgUrl = entity.getImgUrl();
-
+        id = entity.getId();
+        name = entity.getName();
+        description = entity.getDescription();
+        price = entity.getPrice();
+        imgUrl = entity.getImgUrl();
     }
 
     public Long getId() {
