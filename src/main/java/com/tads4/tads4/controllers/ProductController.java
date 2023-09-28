@@ -38,7 +38,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public  ResponseEntity <ProductDTO> inserir (@RequestBody ProductDTO dto) {
+    public  ResponseEntity <ProductDTO> insert (@RequestBody ProductDTO dto) {
         /*dto = service.insert(dto)
         return  dto;*/
         dto = service.insert(dto);

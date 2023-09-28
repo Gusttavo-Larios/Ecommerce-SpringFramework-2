@@ -41,6 +41,7 @@ public class ProductService {
     public ProductDTO insert(ProductDTO dto) {
         Product entity = new Product();
         copyDtoToEntity(dto, entity);
+        entity =repository.save(entity);
         return new ProductDTO(entity);
     }
 
@@ -57,6 +58,7 @@ public class ProductService {
       }
 
     private void copyDtoToEntity(ProductDTO dto, Product entity) {
+        entity.setId(dto.getId());
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
         entity.setPrice(dto.getPrice());
