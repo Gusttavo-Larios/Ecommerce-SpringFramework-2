@@ -4,10 +4,16 @@ import com.tads4.tads4.dto.ProductDTO;
 import com.tads4.tads4.entities.Product;
 import com.tads4.tads4.repositories.ProductRepository;
 
+import com.tads4.tads4.service.exceptions.DatabaseException;
+import com.tads4.tads4.service.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -23,7 +29,7 @@ public class ProductService {
         Product product = result.get();
         ProductDTO dto = new ProductDTO(product);
         return dto;*/
-        Product product = repository.findById(id).get();
+        Product product = repository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Recusro não encontrado"));
         return new ProductDTO(product);
     }
 
@@ -45,17 +51,41 @@ public class ProductService {
         return new ProductDTO(entity);
     }
 
-    @Transactional
+    /*@Transactional
     public ProductDTO update (Long id, ProductDTO dto) {
         Product entity = repository.getReferenceById(id);
         copyDtoToEntity(dto, entity);
         return new ProductDTO(entity);
+    }*/
+    @Transactional
+    public ProductDTO update (Long id, ProductDTO dto) {
+
+        try{
+            Product entity = repository.getReferenceById(id);
+            copyDtoToEntity(dto, entity);
+            return new ProductDTO(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        }
+
     }
 
-    @Transactional
+    /*@Transactional
     public void delete(Long id) {
          repository.deleteById(id);
-      }
+      }*/
+
+    @Transactional (propagation = Propagation.SUPPORTS)
+    public void delete(Long id) {
+        try{
+            repository.deleteById(id);
+        } catch(EmptyResultDataAccessException e){
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        } catch(DataIntegrityViolationException e){
+            throw new DatabaseException("Falha de integrigadade referencial");
+        }
+
+    }
 
     private void copyDtoToEntity(ProductDTO dto, Product entity) {
         entity.setId(dto.getId());
