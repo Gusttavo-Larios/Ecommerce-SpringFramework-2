@@ -1,12 +1,9 @@
 package com.tads4.tads4.controllers;
 
 
-import com.tads4.tads4.dto.CustomError;
 import com.tads4.tads4.dto.ProductDTO;
-import com.tads4.tads4.entities.Product;
-import com.tads4.tads4.repositories.ProductRepository;
 import com.tads4.tads4.service.ProductService;
-import com.tads4.tads4.service.exceptions.ResourceNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,9 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/products")
@@ -45,14 +39,14 @@ public class ProductController {
     }*/
 
     @GetMapping
-    public ResponseEntity<Page<ProductDTO>> findAll(Pageable pageable) {
+    public ResponseEntity<Page<ProductDTO>> findAll(@PathVariable Pageable pageable) {
         Page<ProductDTO> dto = service.findAll(pageable);
         return ResponseEntity.ok(dto);
 
     }
 
     @PostMapping
-    public ResponseEntity<ProductDTO> insert(@RequestBody ProductDTO dto) {
+    public ResponseEntity<ProductDTO> insert(@Valid @RequestBody ProductDTO dto) {
         /*dto = service.insert(dto)
         return  dto;*/
         dto = service.insert(dto);
@@ -61,7 +55,7 @@ public class ProductController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProductDTO> updated(@PathVariable Long id, @RequestBody ProductDTO dto) {
+    public ResponseEntity<ProductDTO> updated(@PathVariable Long id, @Valid @RequestBody ProductDTO dto) {
         dto = service.update(id, dto);
         return ResponseEntity.ok(dto);
 
