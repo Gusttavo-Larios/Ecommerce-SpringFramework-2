@@ -3,7 +3,6 @@ package com.tads4.tads4.service;
 import com.tads4.tads4.dto.ProductDTO;
 import com.tads4.tads4.entities.Product;
 import com.tads4.tads4.repositories.ProductRepository;
-
 import com.tads4.tads4.service.exceptions.DatabaseException;
 import com.tads4.tads4.service.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,9 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 public class ProductService {
     @Autowired
@@ -29,7 +25,8 @@ public class ProductService {
         Product product = result.get();
         ProductDTO dto = new ProductDTO(product);
         return dto;*/
-        Product product = repository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Recusro não encontrado"));
+        Product product = repository.findById(id).orElseThrow(
+                ()-> new ResourceNotFoundException("Recusro não encontrado"));
         return new ProductDTO(product);
     }
 
