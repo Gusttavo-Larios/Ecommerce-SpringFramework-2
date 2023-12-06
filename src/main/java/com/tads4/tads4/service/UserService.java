@@ -1,10 +1,10 @@
 package com.tads4.tads4.service;
 
-import com.tads4.tads4.dto.ProductDTO;
-import com.tads4.tads4.entities.Product;
-import com.tads4.tads4.repositories.ProductRepository;
+import com.tads4.tads4.dto.UserDTO;
+import com.tads4.tads4.entities.User;
+import com.tads4.tads4.repositories.UserRepository;
 import com.tads4.tads4.service.exceptions.DatabaseException;
-import com.tads4.tads4.service.exceptions.ResourceNotFoundException;
+import com.tads4.tads4.service.exceptions.UserNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,39 +16,39 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ProductService {
+public class UserService {
     @Autowired
-    private ProductRepository repository;
+    private UserRepository repository;
 
-    public ProductDTO findById(Long id) {
-        Product product = repository.findById(id).orElseThrow(
-                ()-> new ResourceNotFoundException("Recusro não encontrado"));
-        return new ProductDTO(product);
+    public UserDTO findById(Long id) {
+        User user = repository.findById(id).orElseThrow(
+                ()-> new UserNotFoundException("Usuário não encontrado"));
+        return new UserDTO(user);
     }
 
     @Transactional (readOnly = true)
-    public Page<ProductDTO> findAll(Pageable pageable) {
-        Page<Product> result = repository.findAll(pageable);
-        return result.map(ProductDTO::new);
+    public Page<UserDTO> findAll(Pageable pageable) {
+        Page<User> result = repository.findAll(pageable);
+        return result.map(x-> new UserDTO(x));
     }
 
     @Transactional
-    public ProductDTO insert(ProductDTO dto) {
-        Product entity = new Product();
+    public UserDTO insert(UserDTO dto) {
+        User entity = new User();
         copyDtoToEntity(dto, entity);
         entity =repository.save(entity);
-        return new ProductDTO(entity);
+        return new UserDTO(entity);
     }
 
     @Transactional
-    public ProductDTO update (Long id, ProductDTO dto) {
+    public UserDTO update (Long id, UserDTO dto) {
 
         try{
-            Product entity = repository.getReferenceById(id);
+            User entity = repository.getReferenceById(id);
             copyDtoToEntity(dto, entity);
-            return new ProductDTO(entity);
+            return new UserDTO(entity);
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException("Recurso não encontrado");
+            throw new UserNotFoundException("Recurso não encontrado");
         }
 
     }
@@ -58,21 +58,20 @@ public class ProductService {
         try{
             repository.deleteById(id);
         } catch(EmptyResultDataAccessException e){
-            throw new ResourceNotFoundException("Recurso não encontrado");
+            throw new UserNotFoundException("Recurso não encontrado");
         } catch(DataIntegrityViolationException e){
             throw new DatabaseException("Falha de integrigadade referencial");
         }
 
     }
 
-    private void copyDtoToEntity(ProductDTO dto, Product entity) {
+    private void copyDtoToEntity(UserDTO dto, User entity) {
         entity.setId(dto.getId());
         entity.setName(dto.getName());
-        entity.setDescription(dto.getDescription());
-        entity.setPrice(dto.getPrice());
-        entity.setImgUrl(dto.getImgUrl());
-
+        entity.setEmail(dto.getEmail());
+        entity.setBirthDate(dto.getBirthDate());
+        entity.setPassword(dto.getPassword());
+        entity.setPhone(dto.getPhone());
     }
-
 
 }
